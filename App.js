@@ -1,21 +1,44 @@
-import { NavigationContainer } from "@react-navigation/native";
+import React, { useState, useEffect } from "react";
+import { View, StyleSheet, ActivityIndicator } from "react-native";
+import { ThemeProvider } from "./context/ThemeContext";
 import AuthProvider from "./context/AuthContext";
-import AppDrawer from "./navigation/AppDrawer";
-import LoginScreen from "./screens/LoginScreen";
-import { useContext } from "react";
-import { AuthContext } from "./context/AuthContext";
+import TodoListFetchScreen from "./screens/TodoListFetchScreen";
 
-function RootNavigator() {
-  const { user } = useContext(AuthContext);
-  return user ? <AppDrawer /> : <LoginScreen />;
-}
-
+// Version simple sans SQLite pour éviter les erreurs
 export default function App() {
+  const [isReady, setIsReady] = useState(false);
+
+  useEffect(() => {
+    // Simuler un temps de chargement
+    setTimeout(() => {
+      setIsReady(true);
+    }, 500);
+  }, []);
+
+  if (!isReady) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#007AFF" />
+        <ActivityIndicator size="small" color="#34C759" />
+        <ActivityIndicator size="small" color="#FF9500" />
+      </View>
+    );
+  }
+
   return (
     <AuthProvider>
-      <NavigationContainer>
-        <RootNavigator />
-      </NavigationContainer>
+      <ThemeProvider>
+        <TodoListFetchScreen />
+      </ThemeProvider>
     </AuthProvider>
   );
 }
+
+const styles = StyleSheet.create({
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#ffffff",
+  },
+});

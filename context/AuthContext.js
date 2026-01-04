@@ -9,7 +9,9 @@ export default function AuthProvider({ children }) {
     setUser({ username: name });
   };
 
-  const logout = () => setUser(null);
+  const logout = () => {
+    setUser(null);
+  };
 
   return (
     <AuthContext.Provider value={{ user, login, logout }}>
